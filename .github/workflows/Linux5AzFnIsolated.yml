@@ -37,6 +37,8 @@ jobs:
         dotnet tool install --global Microsoft.Playwright.CLI
         dotnet build --configuration Release --output ./output
         playwright install chromium
+        echo "--- Permissions for chrome binary are ---"
+        ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
         popd
     
     - name: Deploy to Azure Function App
