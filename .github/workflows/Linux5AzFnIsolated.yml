@@ -11,6 +11,7 @@ env:
   WORKING_DIRECTORY: Linux5AzFnIsolated
   DOTNET_CORE_VERSION_INPROC: 3.1.x
   PLAYWRIGHT_BROWSERS_PATH: ./output/.playwright/ms-playwright
+  WEBSITE_MOUNT_ENABLED: 1
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -37,9 +38,6 @@ jobs:
         dotnet build --configuration Release --output ./output
         playwright install chromium
         popd
-    
-    # - name: Publish
-    #   run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
     
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
