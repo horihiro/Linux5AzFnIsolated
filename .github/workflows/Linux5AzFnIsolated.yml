@@ -5,12 +5,12 @@ on:
     - master
 env:
   AZURE_FUNCTIONAPP_NAME: Linux5AzFnIsolated
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: Linux5AzFnIsolated
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 5.0.x
   WORKING_DIRECTORY: Linux5AzFnIsolated
   DOTNET_CORE_VERSION_INPROC: 3.1.x
-  PLAYWRIGHT_BROWSERS_PATH: Linux5AzFnIsolated/output/.playwright/ms-playwright
+  PLAYWRIGHT_BROWSERS_PATH: ./output/.playwright/ms-playwright
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -29,27 +29,21 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
         include-prerelease: True
     
-    - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
-    
-    - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
-
     - name: Build and Playwright Install
       shell: bash
       run: |
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         dotnet tool install --global Microsoft.Playwright.CLI
+        dotnet build --configuration Release --output ./output
         playwright install chromium
         popd
     
     # - name: Publish
     #   run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
-
     
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
         publish-profile: ${{ secrets.Linux5AzFnIsolated_d519 }}
