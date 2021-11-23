@@ -33,7 +33,7 @@ jobs:
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
     - name: Build and Playwright Install
       shell: bash
@@ -43,8 +43,8 @@ jobs:
         playwright install chromium
         popd
     
-    - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+    # - name: Publish
+    #   run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
     
     - name: Deploy to Azure Function App
