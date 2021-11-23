@@ -18,18 +18,20 @@ namespace Linux5AzFnIsolated
             logger.LogInformation("C# HTTP trigger function processed a request.");
 
             var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-            response.WriteString("Welcome to Azure Functions!");
-            return response;
+            
+            // original
+            // response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+            // response.WriteString("Welcome to Azure Functions!");
+            // return response;
 
             // playwright
-            // response.Headers.Add("Content-Type", "image/png");
-            // using var playwright = await Playwright.CreateAsync();
-            // await using var browser = await playwright.Chromium.LaunchAsync();
-            // var page = await browser.NewPageAsync();
-            // await page.GotoAsync("https://playwright.dev/dotnet");
-            // response.WriteBytes(await page.ScreenshotAsync());
-            // return response;
+            response.Headers.Add("Content-Type", "image/png");
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync();
+            var page = await browser.NewPageAsync();
+            await page.GotoAsync("https://playwright.dev/dotnet");
+            response.WriteBytes(await page.ScreenshotAsync());
+            return response;
         }
     }
 }
