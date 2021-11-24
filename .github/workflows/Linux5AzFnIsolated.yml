@@ -30,16 +30,16 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
         include-prerelease: True
     
-    - name: Build and Playwright Install
-      shell: bash
-      run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        dotnet tool install --global Microsoft.Playwright.CLI
-        dotnet build --configuration Release --output ./output
-        playwright install chromium
-        echo "--- Permissions for chrome binary are ---"
-        ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
-        popd
+    # - name: Build and Playwright Install
+    #   shell: bash
+    #   run: |
+    #     pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+    #     dotnet tool install --global Microsoft.Playwright.CLI
+    #     dotnet build --configuration Release --output ./output
+    #     playwright install chromium
+    #     echo "--- Permissions for chrome binary are ---"
+    #     ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
+    #     popd
     
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
@@ -48,3 +48,4 @@ jobs:
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
         publish-profile: ${{ secrets.Linux5AzFnIsolated_d519 }}
         scm-do-build-during-deployment: true
+        enable-oryx-build: true
