@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsDashboard": "....",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_EXTENSION_VERSION": "~3",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "....",
+    "APPLICATIONINSIGHTS_CONNECTION_STRING": "....",
+    "WEBSITE_MOUNT_ENABLED": "1",
+    "PLAYWRIGHT_BROWSERS_PATH": "/home/site/wwwroot/.playwright",
+    "DEBUG": "pw:api"
+  }
+}
