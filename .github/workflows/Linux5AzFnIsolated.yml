@@ -38,17 +38,19 @@ jobs:
         dotnet tool install --global Microsoft.Playwright.CLI
         dotnet build --configuration Release --output ./output
         playwright install chromium
-        echo "--- Permissions for chrome binary are ---"
-        ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
+        # output is: Playwright build of chromium v939194 downloaded to /home/runner/work/Linux5AzFnIsolated/Linux5AzFnIsolated/output/.playwright/ms-playwright/chromium-939194
 
         echo "--- Permissions for .playwright folder are ---"
         ls -la ./output
+        # output is: drwxr-xr-x 5 runner docker   4096 Nov 25 10:54 .playwright
+        
         echo "--- Permissions for inside .playwright folder are ---"
         ls -la ./output/.playwright
+        # output is: drwxr-xr-x 5 runner docker 4096 Nov 25 10:54 ms-playwright
 
-        echo "--- Update rwx Permissions for .playwright folder ---"
-        chmod u+rwx ./output/.playwright
-
+        echo "--- Permissions for chrome binary are ---"
+        ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
+        # output is: -rwxr-xr-x 1 runner docker 304888584 Nov 25 10:54 ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
         popd
     
     - name: Deploy to Azure Function App
