@@ -40,6 +40,13 @@ jobs:
         playwright install chromium
         echo "--- Permissions for chrome binary are ---"
         ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
+
+        echo "--- Permissions for .playwright folder are ---"
+        ls -la ./output/.playwright
+
+        echo "--- Update rwx Permissions for .playwright folder ---"
+        chmod u+rwx ./output/.playwright
+
         popd
     
     - name: Deploy to Azure Function App
