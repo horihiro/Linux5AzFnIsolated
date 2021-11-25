@@ -26,7 +26,9 @@ namespace Linux5AzFnIsolated
 
             // playwright
             response.Headers.Add("Content-Type", "image/png");
+            logger.LogInformation("Calling Playwright.CreateAsync()"); 
             using var playwright = await Playwright.CreateAsync();
+            logger.LogInformation("Calling await playwright.Chromium.LaunchAsync()");
             await using var browser = await playwright.Chromium.LaunchAsync();
             var page = await browser.NewPageAsync();
             await page.GotoAsync("https://playwright.dev/dotnet");
