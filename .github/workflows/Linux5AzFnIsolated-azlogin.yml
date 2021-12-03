@@ -1,0 +1,62 @@
+name: Build and deploy .NET Core Function App to Azure functions app
+on:
+  workflow_dispatch:
+env:
+  AZURE_FUNCTIONAPP_NAME: playwright-linux-dynamic
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
+  WORKING_DIRECTORY: Linux5AzFnIsolated
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 5.0.x
+  DOTNET_CORE_VERSION_INPROC: 3.1.x
+  PLAYWRIGHT_BROWSERS_PATH: ./output/.playwright/ms-playwright
+  WEBSITE_MOUNT_ENABLED: 1
+  DEBUG: pw:api
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code from GitHub
+      uses: actions/checkout@v2
+    
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    
+    - name: Setup .NET Core (for inproc extensions)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
+        include-prerelease: True
+    
+    - name: Build and Playwright Install
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        dotnet tool install --global Microsoft.Playwright.CLI
+        dotnet build --configuration Release --output ./output
+        playwright install chromium
+        # output is: Playwright build of chromium v939194 downloaded to /home/runner/work/Linux5AzFnIsolated/Linux5AzFnIsolated/output/.playwright/ms-playwright/chromium-939194
+        echo "--- Permissions for .playwright folder are ---"
+        ls -la ./output
+        # output is: drwxr-xr-x 5 runner docker   4096 Nov 25 10:54 .playwright
+        
+        echo "--- Permissions for inside .playwright folder are ---"
+        ls -la ./output/.playwright
+        # output is: drwxr-xr-x 5 runner docker 4096 Nov 25 10:54 ms-playwright
+        echo "--- Permissions for chrome binary are ---"
+        ls -la ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
+        # output is: -rwxr-xr-x 1 runner docker 304888584 Nov 25 10:54 ./output/.playwright/ms-playwright/chromium-939194/chrome-linux/chrome
+        popd
+    
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
+    - name: Deploy to Azure Function App
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+        # publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
