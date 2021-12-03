@@ -1,8 +1,6 @@
 name: Build and deploy .NET Core Function App to Azure functions app
 on:
-  push:
-    branches:
-    - master
+  workflow_dispatch:
 env:
   AZURE_FUNCTIONAPP_NAME: Linux5AzFnIsolated
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
@@ -13,6 +11,7 @@ env:
   PLAYWRIGHT_BROWSERS_PATH: ./output/.playwright/ms-playwright
   WEBSITE_MOUNT_ENABLED: 1
   DEBUG: pw:api
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
