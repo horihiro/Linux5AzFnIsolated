@@ -2,7 +2,7 @@ name: Build and deploy .NET Core Function App to Azure functions app
 on:
   workflow_dispatch:
 env:
-  AZURE_FUNCTIONAPP_NAME: Linux5AzFnIsolated
+  AZURE_FUNCTIONAPP_NAME: playwright-linux-dynamic
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
   WORKING_DIRECTORY: Linux5AzFnIsolated
   CONFIGURATION: Release
