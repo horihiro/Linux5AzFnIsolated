@@ -15,19 +15,16 @@ namespace Linux5AzFnIsolated
     public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req,
         FunctionContext executionContext)
     {
-      Process process = new Process
+      ProcessStartInfo startInfo = new ProcessStartInfo
       {
-        StartInfo = new ProcessStartInfo
-        {
-          FileName = "ls",
-          ArgumentList = {"-al", "/home/site/wwwroot/.playwright/ms-playwright/**/chrome-linux/chrome"},
-          RedirectStandardInput = true,
-          RedirectStandardOutput = true,
-          RedirectStandardError = true,
-          UseShellExecute = false
-        }
+        FileName = "sh",
+        ArgumentList = {"-c", "ls -al ./.playwright/ms-playwright/**/chrome-linux/chrome"},
+        RedirectStandardInput = true,
+        RedirectStandardOutput = true,
+        RedirectStandardError = true,
+        UseShellExecute = false
       };
-      process.Start();
+      Process process = Process.Start(startInfo);
       var query = System.Web.HttpUtility.ParseQueryString(req.Url.Query);
       string output = process.StandardOutput.ReadToEnd();
       process.WaitForExit();
